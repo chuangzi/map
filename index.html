@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body, html {width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
+        #allmap{width:50%;height:70%;}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=dax7jNuS2tsvIxlIvGMRe59R7Ar89fCp"></script>
+    <title>纯文本的信息窗口</title>
+</head>
+<body>
+<div id="allmap"></div>
+<script type="text/javascript" src="js/dazhongdianping.js"></script>
+<script type="text/javascript">
+    // 百度地图API功能
+    var markers = [];
+    for(var i in dataArr) {
+        var obj = dataArr[i];
+        markers.push({
+            title: obj.shopName,
+            position: {
+                lat: obj.geoLat,
+                lng: obj.geoLng
+            },
+            imageOffset: {width: 0, height: 3},
+            content: '\
+			<div class="map-info">\
+				<h6>\
+				<a href="/shop/' + obj.shopId + '" title="' + obj.shopName + '" target="_blank" class="tit">' + obj.shopName + '</a>\
+				<a class="igroup" target="_blank" href="http://t.dianping.com/deal/' + obj.shopRecordBean.shopGroupID + '"></a>\
+				<a href="' + obj.branchUrl + '" target="_blank" title="分店" class="subbranch">分店</a>\
+				</h6>\
+				<div class="map-remark">\
+					<span class="comm-per">\
+						<span class="comm-per">人均<em class="per">￥' + obj.avgPrice + '</em></span>\
+					</span>\
+				</div>\
+				<div class="map-address">\
+					<p><em class="col-sep">地址：</em>' + obj.address + '</p>\
+					<p><em class="col-sep">电话：</em>' + obj.phoneNo + '</p>\
+				</div>\
+				<a href="javascript:;" title="" class="close"></a><span class="arrow"></span>\
+			</div>'
+        });
+    }
+
+
+    var map = new BMap.Map("allmap");
+    var point = new BMap.Point(116.417854,39.921988);
+    var marker = new BMap.Marker(point);  // 创建标注
+    map.addOverlay(marker);              // 将标注添加到地图中
+    map.centerAndZoom(point, 15);
+    /*var opts = {
+        width : 200,     // 信息窗口宽度
+        height: 100,     // 信息窗口高度
+        title : "海底捞王府井店" , // 信息窗口标题
+        enableMessage:true,//设置允许信息窗发送短息
+        message:"亲耐滴，晚上一起吃个饭吧？戳下面的链接看下地址喔~"
+    }
+    var infoWindow = new BMap.InfoWindow("地址：北京市东城区王府井大街88号乐天银泰百货八层", opts);  // 创建信息窗口对象*/
+    marker.addEventListener("click", function(){
+        map.openInfoWindow(infoWindow,point); //开启信息窗口
+    });
+</script>
+
+</body>
+</html>
